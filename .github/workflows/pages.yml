@@ -1,0 +1,46 @@
+# Publica el portal (solo la página de presentación) en GitHub Pages en cada push a main.
+# Las aplicaciones (visor, geocodificador) y el inicio de sesión necesitan los backends:
+# funcionan solo en el despliegue completo con Docker (servidor propio).
+name: Portal en GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build -w @geohive/portal
+        env:
+          BASE_PATH: /${{ github.event.repository.name }}/
+          VITE_SOLO_PRESENTACION: "true"
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: portal/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

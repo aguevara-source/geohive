@@ -1,0 +1,13 @@
+{
+  "name": "@geohive/auth",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Sesión única (código por correo) compartida por las aplicaciones GeoHive",
+  "exports": {
+    ".": "./src/index.tsx"
+  },
+  "peerDependencies": {
+    "react": "^18.3.0"
+  }
+}

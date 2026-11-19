@@ -1,0 +1,17 @@
+{
+  "name": "@geohive/ui",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Identidad visual, catálogo de aplicaciones y componentes comunes de GeoHive",
+  "exports": {
+    ".": "./src/index.ts",
+    "./theme.css": "./src/theme.css"
+  },
+  "dependencies": {
+    "lucide-react": "^0.460.0"
+  },
+  "peerDependencies": {
+    "react": "^18.3.0"
+  }
+}

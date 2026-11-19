@@ -1,0 +1,17 @@
+{
+  "name": "geohive",
+  "private": true,
+  "description": "Plataforma AG-Y GEOHIVE: portal + aplicaciones geoespaciales independientes",
+  "workspaces": [
+    "packages/*",
+    "portal",
+    "apps/*/frontend"
+  ],
+  "scripts": {
+    "dev:portal": "npm run dev -w @geohive/portal",
+    "dev:visor": "npm run dev -w @geohive/visor-web",
+    "dev:geocodificador": "npm run dev -w @geohive/geocodificador-web",
+    "build": "npm run build --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present"
+  }
+}

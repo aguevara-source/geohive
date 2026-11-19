@@ -1,0 +1,166 @@
+@import "tailwindcss";
+@import "@geohive/ui/theme.css";
+
+/* El visor ocupa toda la ventana */
+html, body, #root {
+  height: 100%;
+}
+
+/* Marcadores de lugares de interés (ver categorias.tsx) */
+.gh-poi-contenedor {
+  background: none;
+  border: 0;
+}
+.gh-poi {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.gh-poi-icono {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--c);
+  border: 2px solid #ffffff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+  transition: transform 0.15s;
+}
+.gh-poi:hover .gh-poi-icono {
+  transform: scale(1.15);
+}
+.gh-poi-texto {
+  display: none;
+  position: absolute;
+  left: calc(100% + 4px);
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  font: 600 12px/1.1 "Inter", system-ui, sans-serif;
+  color: var(--c);
+  text-shadow: -1.5px 0 #fff, 1.5px 0 #fff, 0 -1.5px #fff, 0 1.5px #fff, 0 0 3px #fff;
+  pointer-events: none;
+}
+/* Los nombres aparecen al acercarse (la clase la pone Mapa.tsx desde el zoom 16) */
+.gh-etiquetas .gh-poi-texto {
+  display: block;
+}
+
+/* Lugar seleccionado */
+.gh-poi--sel .gh-poi-icono {
+  border-width: 3px;
+  box-shadow: 0 0 0 3px #d4af37, 0 4px 12px rgba(0, 0, 0, 0.55);
+}
+.gh-poi--sel::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 3px solid #d4af37;
+  animation: gh-pulso 1.6s ease-out infinite;
+}
+.gh-poi--sel .gh-poi-texto {
+  display: block;
+  left: calc(100% + 8px);
+  padding: 4px 8px;
+  border-radius: 6px;
+  background: #ffffff;
+  border: 2px solid var(--c);
+  color: #111827;
+  font-weight: 700;
+  font-size: 13px;
+  text-shadow: none;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+@keyframes gh-pulso {
+  from { transform: scale(0.9); opacity: 1; }
+  to { transform: scale(1.7); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .gh-poi--sel::before { animation: none; }
+}
+
+/* Zona que se está consultando: borde punteado en movimiento */
+.gh-zona-cargando {
+  animation: gh-hormigas 0.8s linear infinite;
+}
+@keyframes gh-hormigas {
+  to { stroke-dashoffset: -28; }
+}
+.gh-zona-etiqueta {
+  background: #ffffff;
+  border: 1px solid #0891b2;
+  border-radius: 999px;
+  color: #0e7490;
+  font: 600 12px/1 "Lexend", "Inter", sans-serif;
+  padding: 6px 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+.gh-zona-etiqueta::before {
+  display: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .gh-zona-cargando { animation: none; }
+}
+
+/* Geomarketing: marcadores de los mejores lugares y tooltip de hexágonos */
+.gh-top {
+  background: none;
+  border: 0;
+}
+.gh-top span {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #d4af37;
+  color: #020617;
+  font: 700 14px/1 "Lexend", "Inter", sans-serif;
+  border: 3px solid #ffffff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+/* Locales evaluados (A, B, C): celestes para distinguirlos de los mejores lugares */
+.gh-top.gh-local span {
+  background: #22d3ee;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+}
+.gh-top.gh-local span b { display: block; transform: rotate(45deg); }
+.gh-top.gh-local.gh-inactivo span { opacity: 0.7; border-width: 2px; }
+.gh-anillo { background: none; border: 0; }
+/* Eligiendo un local en el mapa: cursor de mira también sobre hexágonos y puntos */
+.gh-mira, .gh-mira .leaflet-interactive { cursor: crosshair !important; }
+.gh-anillo-etiqueta {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  background: rgba(10, 20, 48, 0.85);
+  border: 1px solid rgba(34, 211, 238, 0.5);
+  color: #e0f2fe;
+  font: 600 10px/1.2 "Inter", sans-serif;
+  padding: 2px 6px;
+  border-radius: 999px;
+  box-shadow: none;
+}
+.gh-anillo-etiqueta::before { display: none; }
+/* Opciones del desplegable de rubros sobre fondo oscuro */
+select.input-field option, select.input-field optgroup { background: #0a1430; color: #ffffff; }
+.gh-tooltip-geo {
+  background: rgba(2, 6, 23, 0.95);
+  color: #e5e7eb;
+  border: 1px solid rgba(34, 211, 238, 0.4);
+  border-radius: 8px;
+  font: 12px/1.45 "Inter", sans-serif;
+}
+.gh-tooltip-geo b { color: #22d3ee; }
+
+/* Información de un hexágono (se abre con clic) */
+.gh-popup-geo .leaflet-popup-content {
+  margin: 10px 14px;
+  font: 12px/1.5 "Inter", sans-serif;
+  color: #e5e7eb;
+}
+.gh-popup-geo .leaflet-popup-content b { color: #22d3ee; }
